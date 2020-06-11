@@ -1,5 +1,6 @@
 const Order = require("./models").order;
 const Product = require("./models").product;
+const User = require("./models").user;
 
 const getOrder = async id => {
   try {
@@ -10,4 +11,15 @@ const getOrder = async id => {
   }
 };
 
-getOrder(1);
+const getUserWithOrder = async id => {
+  try {
+    const user = await User.findByPk(id, {
+      include: [{ model: Order, include: [Product] }],
+    });
+    console.log(user.get({ plain: true }).orders[0].products);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+getUserWithOrder(1);
