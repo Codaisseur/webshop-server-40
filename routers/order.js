@@ -28,6 +28,17 @@ router.post("/", async (req, res, next) => {
       //Using this we await on the whole array of promises as if it was just one
       await Promise.all(orderProductCreatePromises);
 
+      /*
+        this is probably more efficient, first map into objects and use bulkCreate
+        so we avoid doing many trips to the DB.
+
+      const productsWithOrder = productIds.map(pId => ({
+        productId: pId,
+        orderId: newOrder.id,
+      }));
+      const withBulkCreate = await OrderProducts.bulkCreate(productsWithOrder);
+*/
+
       //we now get again the order but with the products to check
       const orderWithProducts = await Order.findByPk(newOrder.id, {
         include: [Product, User],
